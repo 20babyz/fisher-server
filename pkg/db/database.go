@@ -1,24 +1,34 @@
 package db
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
+	"time"
 )
 
-var DB *sql.DB
+var Client *mongo.Client
 
 func InitDB(user, password, host, dbname string) error {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, dbname)
-	db, err := sql.Open("mysql", dsn)
+	uri := fmt.Sprintf("mongodb://%s:%s@%s:27017/%s?authSource=admin", user, password, host, dbname)
+	clientOptions := options.Client().ApplyURI(uri)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	client, err := mongo.Connect(clientOptions)
 	if err != nil {
-		return fmt.Errorf("failed to connect to MySQL: %v", err)
+		return fmt.Errorf("failed to connect to MongoDB: %v", err)
 	}
 
-	if err := db.Ping(); err != nil {
-		return fmt.Errorf("failed to ping MySQL: %v", err)
+	// Ping the database to check connection
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to ping MongoDB: %v", err)
 	}
 
-	DB = db
+	Client = client
+	fmt.Println("Connected to MongoDB successfully")
 	return nil
 }

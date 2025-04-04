@@ -1,11 +1,11 @@
 package main
 
 import (
-	"crawler/internal/config"
-	"crawler/internal/handlers"
-	"crawler/internal/middleware"
-	"crawler/internal/server"
-	"crawler/pkg/db"
+	"api/internal/config"
+	"api/internal/handlers"
+	"api/internal/middleware"
+	"api/internal/server"
+	"api/pkg/db"
 
 	"fmt"
 	"log"
