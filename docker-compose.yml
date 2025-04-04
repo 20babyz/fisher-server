@@ -2,7 +2,6 @@ version: '3'
 
 volumes:
   db_vol:
-    driver: local
 
 services:
   mongodb:
@@ -10,7 +9,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - db_vol:/data
+      - db_vol:/data/db
       - ./pkg/db/init.js:/docker-entrypoint-initdb.d/init.js:ro
     environment:
       - MONGODB_INITDB_ROOT_USERNAME=user
