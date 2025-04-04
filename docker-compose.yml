@@ -1,0 +1,16 @@
+version: '3'
+
+volumes:
+  db_vol:
+    driver: local
+
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - db_vol:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
